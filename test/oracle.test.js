@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2013,2018. All Rights Reserved.
+// Copyright IBM Corp. 2013,2019. All Rights Reserved.
 // Node module: loopback-connector-oracle
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -6,14 +6,12 @@
 'use strict';
 
 /* global getDataSource */
-var juggler = require('loopback-datasource-juggler');
-var CreateDS = juggler.DataSource;
-require('loopback-datasource-juggler/test/common.batch.js');
-require('loopback-datasource-juggler/test/include.test.js');
+const juggler = require('loopback-datasource-juggler');
+const CreateDS = juggler.DataSource;
 
 require('./init/init');
-var should = require('should');
-var Post, db;
+const should = require('should');
+let Post, db;
 
 describe('oracle connector', function() {
   before(function() {
@@ -32,7 +30,7 @@ describe('oracle connector', function() {
     });
   });
 
-  var post;
+  let post;
   it('should support boolean types with true value', function(done) {
     Post.create({title: 'T1', content: 'C1', approved: true}, function(err, p) {
       should.not.exists(err);
@@ -58,15 +56,15 @@ describe('oracle connector', function() {
 
   it('should support boolean types with false value', function(done) {
     Post.create({title: 'T2', content: 'C2', approved: false},
-    function(err, p) {
-      should.not.exists(err);
-      post = p;
-      Post.findById(p.id, function(err, p) {
+      function(err, p) {
         should.not.exists(err);
-        p.should.have.property('approved', false);
-        done();
+        post = p;
+        Post.findById(p.id, function(err, p) {
+          should.not.exists(err);
+          p.should.have.property('approved', false);
+          done();
+        });
       });
-    });
   });
 
   it('should return the model instance for upsert', function(done) {
@@ -116,7 +114,7 @@ describe('oracle connector', function() {
       });
     });
 
-  it('should escape number values to defect SQL injection in find',
+  it('should escape number values to defect SQL injection in find ',
     function(done) {
       Post.find({limit: '(SELECT 1+1)'}, function(err, p) {
         should.exists(err);
@@ -135,15 +133,15 @@ describe('oracle connector', function() {
 
 describe('lazyConnect', function() {
   it('should skip connect phase (lazyConnect = true)', function(done) {
-    var dsConfig = {
+    const dsConfig = {
       host: '127.0.0.1',
       port: 4,
       lazyConnect: true,
       debug: false,
     };
-    var ds = getDS(dsConfig);
+    const ds = getDS(dsConfig);
 
-    var errTimeout = setTimeout(function() {
+    const errTimeout = setTimeout(function() {
       done();
     }, 2000);
     ds.on('error', function(err) {
@@ -153,13 +151,14 @@ describe('lazyConnect', function() {
   });
 
   it('should report connection error (lazyConnect = false)', function(done) {
-    var dsConfig = {
+    const dsConfig = {
       host: '127.0.0.1',
       port: 4,
       lazyConnect: false,
       debug: false,
+      username: 'user',
     };
-    var ds = getDS(dsConfig);
+    const ds = getDS(dsConfig);
 
     ds.on('error', function(err) {
       err.message.should.containEql('TNS');
@@ -167,8 +166,8 @@ describe('lazyConnect', function() {
     });
   });
 
-  var getDS = function(config) {
-    var db = new CreateDS(require('../'), config);
+  const getDS = function(config) {
+    const db = new CreateDS(require('../'), config);
     return db;
   };
 });

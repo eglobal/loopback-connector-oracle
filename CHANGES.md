@@ -1,3 +1,59 @@
+2020-03-19, Version 4.5.2
+=========================
+
+ * Exclude 'deps' and '.github' from npm publish (Dominique Emond)
+
+ * tests: id column should be convered and mapped; (Agnes Lin)
+
+ * chore: update copyrights year (Diana Lau)
+
+
+2019-12-19, Version 4.5.1
+=========================
+
+ * buildQueryColumns should return columns in order (ataft)
+
+ * chore: update CODEOWNERS file (Diana Lau)
+
+ * chore: improve issue and PR templates (Nora)
+
+
+2019-11-01, Version 4.5.0
+=========================
+
+ * Allow CLOB/BLOB data types for migration (ataft)
+
+ * Only callback after the connection is released (Raymond Feng)
+
+ * Fix eslint violations (Raymond Feng)
+
+
+2019-09-19, Version 4.4.0
+=========================
+
+ * temp (Hage Yaapa)
+
+ * update oracledb to v4 (Nora)
+
+
+2019-07-25, Version 4.3.0
+=========================
+
+ * fix eslint violations (Nora)
+
+ * update dependencies (Nora)
+
+ * run shared tests from both v3 and v4 of juggler (Nora)
+
+ * drop support for node.js 6 (Nora)
+
+
+2019-05-22, Version 4.2.0
+=========================
+
+ * Added the connection property "_enableStats" (Eric Alves)
+
+
 2018-12-07, Version 4.1.2
 =========================
 

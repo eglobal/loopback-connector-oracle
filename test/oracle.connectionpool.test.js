@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2013,2018. All Rights Reserved.
+// Copyright IBM Corp. 2013,2019. All Rights Reserved.
 // Node module: loopback-connector-oracle
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -9,10 +9,10 @@
 process.env.NODE_ENV = 'test';
 require('should');
 
-var async = require('async');
+const async = require('async');
 
-var DataSource = require('loopback-datasource-juggler').DataSource;
-var db, config;
+const DataSource = require('loopback-datasource-juggler').DataSource;
+let db, config;
 
 before(function() {
   config = require('rc')('loopback', {dev: {oracle: {}}}).dev.oracle;
@@ -26,7 +26,7 @@ describe('Oracle connector', function() {
   it('should create connection pool', function(done) {
     db = new DataSource(require('../'), config);
     db.connect(function() {
-      var info = db.connector.pool;
+      const info = db.connector.pool;
       info.should.have.property('connectionsOpen', 1);
       info.should.have.property('connectionsInUse', 0);
       info.should.have.property('poolMax', 10);
@@ -37,14 +37,14 @@ describe('Oracle connector', function() {
     });
   });
 
-  it('should create connection pool', function(done) {
+  it('should create connection pool with config', function(done) {
     config.minConn = 2;
     config.maxConn = 4;
     config.incrConn = 2;
     config.timeout = 5;
     db = new DataSource(require('../'), config);
     db.connect(function() {
-      var info = db.connector.pool;
+      const info = db.connector.pool;
       info.should.have.property('connectionsOpen', 2);
       info.should.have.property('connectionsInUse', 0);
       info.should.have.property('poolMax', 4);
@@ -52,8 +52,8 @@ describe('Oracle connector', function() {
       info.should.have.property('poolIncrement', 2);
       info.should.have.property('poolTimeout', 5);
 
-      var tasks = [];
-      for (var i = 0; i < 3; i++) {
+      const tasks = [];
+      for (let i = 0; i < 3; i++) {
         tasks.push(db.connector.pool.getConnection.bind(db.connector.pool));
       }
       async.parallel(tasks, function(err, connections) {
@@ -65,6 +65,18 @@ describe('Oracle connector', function() {
           // console.log(info);
           db.disconnect(done);
         });
+      });
+    });
+  });
+
+  it('should close connection pool gracefully', function(done) {
+    db = new DataSource(require('../'), config);
+    db.connect(function() {
+      // Call ping to acquire/release a connection from the pool
+      db.ping(function(err) {
+        if (err) return done(err);
+        // It should disconnect gracefully
+        db.disconnect(done);
       });
     });
   });
